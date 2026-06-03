@@ -36,6 +36,8 @@ export default defineConfig({
       enabled: process.env.VITE_PRERENDER !== "false",
       crawlLinks: false,
       failOnError: false,
+      // Only prerender the SPA shell — skip auth routes that need Supabase at build time
+      autoStaticPathsDiscovery: false,
     },
   },
   // Nitro: off for GitHub Pages (static). Set NITRO_PRESET=cloudflare-module (etc.) for full-stack hosts.

@@ -3,7 +3,7 @@
  * - index.html + 404.html from the SPA shell (client-side routing)
  * - .nojekyll so Jekyll does not strip underscored assets
  */
-import { copyFile, access, writeFile } from "node:fs/promises";
+import { copyFile, access, writeFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,9 +28,18 @@ async function resolveShell() {
 }
 
 const shell = await resolveShell();
-await copyFile(shell, path.join(outDir, "index.html"));
-await copyFile(shell, path.join(outDir, "404.html"));
+const indexPath = path.join(outDir, "index.html");
+const notFoundPath = path.join(outDir, "404.html");
+
+await copyFile(shell, indexPath);
+await copyFile(shell, notFoundPath);
 await writeFile(path.join(outDir, ".nojekyll"), "");
 
-console.log(`[prepare-gh-pages] Using shell: ${path.basename(shell)}`);
+// GitHub Pages serves project sites at /repo-name/ — root index.html is required
+const stats = await stat(indexPath);
+if (stats.size < 100) {
+  throw new Error("index.html is too small; SPA shell copy may have failed");
+}
+
+console.log(`[prepare-gh-pages] Using shell: ${path.basename(shell)} (${stats.size} bytes)`);
 console.log("[prepare-gh-pages] Wrote index.html, 404.html, .nojekyll");

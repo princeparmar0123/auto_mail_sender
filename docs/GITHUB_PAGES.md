@@ -19,6 +19,9 @@ Your site will be at:
 
 `https://<username>.github.io/auto_mail_sender/`
 
+**Important:** Use the full URL including the repo name.  
+`https://<username>.github.io/` alone will show GitHub’s **404 File not found** (that URL is not your app).
+
 ## Local development
 
 ```bash
