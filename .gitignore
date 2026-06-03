@@ -19,7 +19,11 @@ dist/
 # Package files
 *.jar
 
-*.env
+# Local secrets (never commit)
+.env
+.env.local
+.env.*.local
+!.env.example
 # Maven
 target/
 dist/
